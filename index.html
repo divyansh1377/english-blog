@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dalhousie Winter Escape | Travel Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23667eea" width="1200" height="600"/><path fill="%23764ba2" opacity="0.3" d="M0,300 Q300,100 600,300 T1200,300 L1200,600 L0,600 Z"/></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content {
+            z-index: 2;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator::before {
+            content: '↓';
+            font-size: 2rem;
+            color: white;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-section {
+            background: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .intro-section h2 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 2rem;
+        }
+
+        .intro-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            color: #555;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin: 40px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+        }
+
+        .day-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 20px;
+        }
+
+        .day-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .day-title {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .day-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+
+        .day-summary {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .day-summary h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .day-summary ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .day-summary li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .day-summary li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 250px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .placeholder-img {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 20px;
+            margin: 60px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .cta-section {
+            background: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .day-card {
+                padding: 30px 20px;
+            }
+            
+            .day-number {
+                font-size: 2rem;
+            }
+            
+            .day-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Dalhousie Winter Escape</h1>
+            <p>A Journey Through Misty Mountains & Magical Moments</p>
+        </div>
+        <div class="scroll-indicator"></div>
+    </div>
+
+    <div class="intro-section">
+        <div class="container">
+            <h2>The Adventure Begins</h2>
+            <p>This January, I took an amazing trip to Dalhousie with some of my closest friends, and honestly, it was unforgettable.</p>
+            <p>There's something magical about visiting a hill station in winter. The cold wind hitting your face, the mountains disappearing into thick fog, and those little patches of snow along the roads - it all felt like we'd stepped into a postcard.</p>
+            <p>What really got me was how peaceful everything was. Just endless pine trees, stunning views at every turn, and this calm that you don't find in the city. It was exactly the kind of break I needed - no stress, no rush, just good company and beautiful scenery.</p>
+            <p><strong>Definitely one of the best trips I've been on!</strong></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Day 1 -->
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-number">01</div>
+                <div class="day-title">Arrival & First Impressions</div>
+            </div>
+            <div class="day-content">
+                <p>We kicked off super early in the morning - everyone was pumped and ready to go. The drive itself was half the fun, honestly. We had our playlist blasting, cracking jokes the whole way, and munching on snacks non-stop.</p>
+                
+                <p>The closer we got to the hills, the more the temperature started dropping. You could literally feel the air getting cooler and crisper - it was such a nice change!</p>
+                
+                <p>We rolled into Dalhousie by late afternoon, and man, the view just stopped us in our tracks. Misty mountains everywhere, these massive deodar trees towering over us, and these cute little winding roads that felt straight out of a movie.</p>
+                
+                <p>After dumping our bags at the hotel, we were too excited to rest, so we headed straight to Gandhi Chowk to check out the local market. Had to try the momos, obviously - they were so good! Then we just wandered around, taking in the vibe with a relaxed evening walk.</p>
+                
+                <p>The best part? That night, we all sat out on the balcony, bundled up, just watching the little lights scattered across the mountains. No phones, no distractions - just us, the view, and good conversation. It was perfect.</p>
+            </div>
+            
+            <div class="day-summary">
+                <h4>Day 1 Highlights</h4>
+                <ul>
+                    <li>Epic road trip with music and snacks</li>
+                    <li>First glimpse of misty mountains and deodar trees</li>
+                    <li>Explored Gandhi Chowk market</li>
+                    <li>Delicious local momos</li>
+                    <li>Peaceful balcony evening with mountain views</li>
+                </ul>
+            </div>
+            
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="photo1 - Copy.jpg" alt="Road Trip Vibes" 🚗/>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">First View of Dalhousie 🏔️</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Gandhi Chowk Market 🏪</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Balcony Night Views ✨</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-number">02</div>
+                <div class="day-title">Khajjiar - Mini Switzerland</div>
+            </div>
+            <div class="day-content">
+                <p>Day two was all about Khajjiar - they call it "Mini Switzerland," and I totally get why now. The place is absolutely stunning! Imagine this huge green meadow surrounded by thick forests on all sides. It literally looked unreal, like something out of a fantasy movie.</p>
+                
+                <p>We went a bit crazy with the photos, not gonna lie. Everyone was posing left and right! Then we got into some fun games on the grass - just running around and being silly, you know?</p>
+                
+                <p>But the real highlight? We decided to go all out and try paragliding and zorbing. My heart was racing, but it was such a rush! Rolling down a hill inside a giant ball is as fun as it sounds, trust me.</p>
+                
+                <p>There's this gorgeous little lake right in the middle of the meadow that just ties everything together. We spent some time there just soaking it all in - the reflection of the trees in the water, the quiet... it was so peaceful.</p>
+                
+                <p>By evening, when we headed back to Dalhousie, we were completely exhausted. Like, couldn't-feel-our-legs kind of tired. But honestly? We were all grinning from ear to ear. Totally worth it!</p>
+            </div>
+            
+            <div class="day-summary">
+                <h4>Day 2 Highlights</h4>
+                <ul>
+                    <li>Visited Khajjiar - Mini Switzerland</li>
+                    <li>Lush green meadows and dense forests</li>
+                    <li>Thrilling paragliding experience</li>
+                    <li>Zorbing adventure</li>
+                    <li>Peaceful lake in the meadow</li>
+                    <li>Tons of memorable photos</li>
+                </ul>
+            </div>
+            
+            <div class="gallery">
+                <div class="gallery-item">
+                    <div class="placeholder-img">Khajjiar Meadows 🌿</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Paragliding Thrills 🪂</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Zorbing Fun 🎱</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Beautiful Lake 💙</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-number">03</div>
+                <div class="day-title">Dainkund Peak Trek</div>
+            </div>
+            <div class="day-content">
+                <p>Day three was our adventure day - we decided to tackle Dainkund Peak, which is one of the highest points around Dalhousie.</p>
+                
+                <p>Not gonna sugarcoat it - the trek was tough! There were moments when we were huffing and puffing, wondering why we thought this was a good idea. But then that cool mountain breeze would hit us, or we'd turn around and see this incredible view, and suddenly we'd get a second wind. It's funny how nature does that to you.</p>
+                
+                <p>When we finally made it to the top though? Totally worth every step. We're talking a full 360-degree view of the valley - mountains as far as you could see. It felt like we were on top of the world!</p>
+                
+                <p>We also checked out the Pohlani Mata temple up there. And the clouds - oh man, the clouds were literally at our level! We couldn't resist taking a million photos, trying to "touch" the clouds. We probably looked ridiculous but who cares, right?</p>
+                
+                <p>On the way back down, our legs were killing us, so we stopped at this tiny café on the hillside. Ordered hot Maggi and chai, and I swear, that simple meal tasted like the best thing ever. There's something about hot food after a long trek that just hits different!</p>
+            </div>
+            
+            <div class="day-summary">
+                <h4>Day 3 Highlights</h4>
+                <ul>
+                    <li>Challenging trek to Dainkund Peak</li>
+                    <li>360-degree valley views from the top</li>
+                    <li>Visited Pohlani Mata temple</li>
+                    <li>Clouds at eye level</li>
+                    <li>Hot Maggi and chai at hillside café</li>
+                    <li>Unforgettable mountain experience</li>
+                </ul>
+            </div>
+            
+            <div class="gallery">
+                <div class="gallery-item">
+                    <div class="placeholder-img">Trek Trail 🥾</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Peak Summit View 🏔️</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Pohlani Mata Temple 🛕</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Clouds at Eye Level ☁️</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-number">04</div>
+                <div class="day-title">Relaxation & Local Exploration</div>
+            </div>
+            <div class="day-content">
+                <p>After three days of non-stop action, we all agreed day four needed to be a chill day. Our bodies were basically begging for a break!</p>
+                
+                <p>We started the morning slow - no alarms, no rush. Just woke up naturally, had a leisurely breakfast at the hotel, and sat around chatting for a bit. Sometimes the best part of a trip is just hanging out with your friends, you know?</p>
+                
+                <p>Around noon, we decided to explore some of the smaller, lesser-known spots around Dalhousie. We stumbled upon St. John's Church - this beautiful old structure with amazing colonial architecture. The place had such a peaceful vibe, and the stained glass windows were absolutely gorgeous when the sunlight hit them.</p>
+                
+                <p>Later, we walked along Mall Road, checking out the local shops and picking up some souvenirs. I grabbed some Himachali shawls and local handicrafts - they make great gifts and honestly, I wanted something to remember this trip by.</p>
+                
+                <p>In the evening, we found this cozy little restaurant that served authentic Himachali cuisine. We tried dishes we'd never even heard of before - siddu, madra, and some local trout that was super fresh. The food was incredible, and the owner was so friendly, telling us stories about the region.</p>
+                
+                <p>We ended the day early, back at the hotel, playing cards and just enjoying each other's company. Sometimes the quiet days are just as memorable as the adventure-packed ones.</p>
+            </div>
+            
+            <div class="day-summary">
+                <h4>Day 4 Highlights</h4>
+                <ul>
+                    <li>Relaxed morning with no rush</li>
+                    <li>Visited historic St. John's Church</li>
+                    <li>Strolled along Mall Road</li>
+                    <li>Shopping for local handicrafts and souvenirs</li>
+                    <li>Authentic Himachali cuisine experience</li>
+                    <li>Cozy evening with friends at hotel</li>
+                </ul>
+            </div>
+            
+            <div class="gallery">
+                <div class="gallery-item">
+                    <div class="placeholder-img">St. John's Church ⛪</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Mall Road Shopping 🛍️</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Himachali Cuisine 🍛</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Local Handicrafts 🎨</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="day-card">
+            <div class="day-header">
+                <div class="day-number">05</div>
+                <div class="day-title">Farewell & Final Moments</div>
+            </div>
+            <div class="day-content">
+                <p>Already day five - time flew by way too fast! It was hard to believe this was our last day in Dalhousie. That bittersweet feeling was real.</p>
+                
+                <p>We woke up early to catch one last sunrise from our balcony. Watching the golden light slowly spread across the mountains, with that crisp morning air... man, I tried to burn that image into my memory forever. Those are the moments you never want to forget.</p>
+                
+                <p>After checking out, we decided to make one final stop at Subhash Baoli. It's this serene spot surrounded by tall trees, and the water there is supposed to have healing properties. Whether that's true or not, the place definitely had a calming energy. We sat there for a while, just reflecting on the trip and joking about how we didn't want to go back to reality.</p>
+                
+                <p>The drive back home was quieter than the drive up. Everyone was a bit tired, a bit sad, but also incredibly grateful. We kept looking back at photos and videos, reliving the moments we'd just experienced.</p>
+                
+                <p>As we descended from the mountains and the temperature started rising again, it felt like we were leaving a different world behind. The foggy mountains, the pine trees, the cold breeze - already starting to feel like a dream.</p>
+                
+                <p>But here's the thing - the memories we made, the laughs we shared, the adventures we had - those are staying with us forever. This wasn't just a trip; it was an experience that brought us all closer. And honestly? We're already planning the next one!</p>
+            </div>
+            
+            <div class="day-summary">
+                <h4>Day 5 Highlights</h4>
+                <ul>
+                    <li>Beautiful sunrise from the balcony</li>
+                    <li>Visit to peaceful Subhash Baoli</li>
+                    <li>Final moments in the mountains</li>
+                    <li>Reflective drive back home</li>
+                    <li>Endless memories and strengthened friendships</li>
+                    <li>Already planning the next adventure!</li>
+                </ul>
+            </div>
+            
+            <div class="gallery">
+                <div class="gallery-item">
+                    <div class="placeholder-img">Final Sunrise 🌅</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Subhash Baoli 💧</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Group Photo 👥</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Goodbye Dalhousie 👋</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 50px; font-size: 2.5rem;">Trip by Numbers</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Incredible Days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Major Adventures</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Photos Captured</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Memories Made</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Dalhousie Winter Escape | Travel Blog | Made with ❤️ and Wanderlust</p>
+        </div>
+    </footer>
+</body>
+</html>
